@@ -26,7 +26,7 @@ const SearchResults = ({ searchTerm = "google" }) => {
         {/* Results Summary */}
         <div className="mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            <span className="text-blue-500">{filteredData.length} Results</span> for **"{searchTerm}"**
+            <span className="text-blue-500">{filteredData.length} Results</span> for **&quot;{searchTerm}&quot;**
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">Showing all matches from your vault.</p>
         </div>
@@ -51,7 +51,7 @@ const SearchResults = ({ searchTerm = "google" }) => {
                     No Matches Found
                 </h2>
                 <p className="text-gray-600 dark:text-gray-400 max-w-md">
-                    We could not find any entries matching **"{searchTerm}"**. Try refining your search terms.
+                    We could not find any entries matching **&quot;{searchTerm}&quot;**. Try refining your search terms.
                 </p>
              </div>
           )}
