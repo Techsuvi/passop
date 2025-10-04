@@ -1,115 +1,58 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function Splash() {
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  useEffect(() => {
+    setMounted(true); // Ensure client-side
+  }, []);
 
-export default function Home() {
+  useEffect(() => {
+    if (!mounted) return;
+
+    const timer = setTimeout(() => {
+      const userPin = localStorage.getItem("userPin");
+
+      if (userPin) {
+        router.push("/pinlock"); // PIN exists → ask for PIN
+      } else {
+        router.push("/vault"); // No PIN → go to vault
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [mounted, router]);
+
+  if (!mounted) return null; // SSR safeguard
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col items-center justify-between h-screen bg-white px-6">
+      {/* Center Logo & Title */}
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="mb-4">
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+            <path
+              d="M3 17H21C21.55 17 22 17.45 22 18C22 18.55 21.55 19 21 19H3C2.45 19 2 18.55 2 18C2 17.45 2.45 17 3 17ZM2.5 12.57C2.86 12.78 3.32 12.65 3.53 12.29L4 11.47L4.48 12.3C4.69 12.66 5.15 12.78 5.51 12.58C5.87 12.37 5.99 11.92 5.79 11.56L5.3 10.72H6.25C6.66 10.72 7 10.38 7 9.97C7 9.56 6.66 9.22 6.25 9.22H5.3L5.77 8.4C5.98 8.04 5.86 7.58 5.5 7.37C5.32574 7.27299 5.12045 7.24798 4.92799 7.3003C4.73554 7.35262 4.57117 7.47812 4.47 7.65L4 8.47L3.53 7.65C3.42883 7.47812 3.26446 7.35262 3.07201 7.3003C2.87955 7.24798 2.67426 7.27299 2.5 7.37C2.14 7.58 2.02 8.04 2.23 8.4L2.7 9.22H1.75C1.34 9.22 1 9.56 1 9.97C1 10.38 1.34 10.72 1.75 10.72H2.7L2.22 11.55C2.02 11.91 2.14 12.37 2.5 12.57ZM10.5 12.57C10.86 12.78 11.32 12.65 11.53 12.29L12 11.47L12.48 12.3C12.69 12.66 13.15 12.78 13.51 12.58C13.87 12.37 13.99 11.92 13.79 11.56L13.31 10.73H14.26C14.67 10.73 15.01 10.39 15.01 9.98C15.01 9.57 14.67 9.23 14.26 9.23H13.3L13.77 8.41C13.8689 8.23717 13.896 8.03243 13.8455 7.83981C13.795 7.64719 13.671 7.48208 13.5 7.38C13.4153 7.33074 13.3217 7.29865 13.2246 7.28556C13.1275 7.27247 13.0288 7.27864 12.9341 7.30371C12.8394 7.32879 12.7505 7.37227 12.6726 7.43169C12.5947 7.4911 12.5292 7.56529 12.48 7.65L12 8.47L11.53 7.65C11.4811 7.56489 11.4159 7.49032 11.338 7.4306C11.2602 7.37089 11.1712 7.32721 11.0764 7.3021C10.9815 7.27698 10.8826 7.27094 10.7854 7.28431C10.6882 7.29768 10.5946 7.33021 10.51 7.38C10.15 7.59 10.03 8.05 10.24 8.41L10.71 9.23H9.75C9.65198 9.22867 9.55468 9.24684 9.46374 9.28343C9.3728 9.32003 9.29004 9.37432 9.22026 9.44317C9.15049 9.51202 9.09508 9.59404 9.05727 9.68448C9.01946 9.77492 8.99999 9.87197 9 9.97C9 10.38 9.34 10.72 9.75 10.72H10.7L10.22 11.55C10.02 11.91 10.14 12.37 10.5 12.57ZM23 9.97C23 9.56 22.66 9.22 22.25 9.22H21.3L21.77 8.4C21.8689 8.22717 21.896 8.02243 21.8455 7.82981C21.795 7.63719 21.671 7.47208 21.5 7.37C21.4153 7.32074 21.3217 7.28865 21.2246 7.27556C21.1275 7.26247 21.0288 7.26864 20.9341 7.29371C20.8394 7.31879 20.7505 7.36227 20.6726 7.42169C20.5947 7.4811 20.5292 7.55529 20.48 7.64L20 8.47L19.53 7.65C19.4811 7.56489 19.4159 7.49032 19.338 7.4306C19.2602 7.37089 19.1712 7.32721 19.0764 7.3021C18.9815 7.27698 18.8826 7.27094 18.7854 7.28431C18.6882 7.29768 18.5946 7.33021 18.51 7.38C18.15 7.59 18.03 8.05 18.24 8.41L18.71 9.23H17.76C17.6613 9.22774 17.5631 9.24519 17.4711 9.28132C17.3792 9.31746 17.2954 9.37156 17.2247 9.44046C17.1539 9.50937 17.0976 9.59169 17.059 9.68261C17.0204 9.77353 17.0004 9.87123 17 9.97C17 10.38 17.34 10.72 17.75 10.72H18.7L18.22 11.55C18.1703 11.6351 18.1382 11.7292 18.1254 11.8269C18.1126 11.9246 18.1194 12.0239 18.1455 12.1189C18.1716 12.2139 18.2164 12.3027 18.2773 12.3802C18.3381 12.4577 18.4139 12.5222 18.5 12.57C18.86 12.78 19.32 12.65 19.53 12.29L20 11.47L20.48 12.3C20.69 12.66 21.15 12.78 21.51 12.58C21.87 12.37 21.99 11.92 21.79 11.56L21.31 10.73H22.26C22.66 10.72 23 10.38 23 9.97Z"
+              fill="#FF6464"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </svg>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <h1 className="text-4xl font-bold text-black">PassOp</h1>
+      </div>
+
+      {/* Tagline at bottom */}
+      <p className="text-sm text-red-600 pb-6">
+        Secure your passwords, simply.
+      </p>
     </div>
   );
 }
