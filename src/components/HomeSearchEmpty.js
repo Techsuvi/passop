@@ -4,7 +4,7 @@ import Header from './Header';
 
 const HomeSearchEmpty = () => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center">
+    <div className="min-h-screen bg-red-500 dark:bg-red-900 flex flex-col items-center">
       <Header title="All Passwords" showSearch={true} />
 
       <main className="flex-grow w-full max-w-4xl p-6 sm:p-8">
